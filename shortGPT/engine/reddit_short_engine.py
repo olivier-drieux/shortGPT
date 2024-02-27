@@ -80,7 +80,7 @@ class RedditShortEngine(ContentShortEngine):
                                                                           "volume_percentage": 0.11})
             videoEditor.addEditingStep(EditingStep.CROP_1920x1080, {
                                        'url': self._db_background_trimmed})
-            videoEditor.addEditingStep(EditingStep.ADD_SUBSCRIBE_ANIMATION, {'url': AssetDatabase.get_asset_link('subscribe animation')})
+            # videoEditor.addEditingStep(EditingStep.ADD_SUBSCRIBE_ANIMATION, {'url': AssetDatabase.get_asset_link('subscribe animation')})
 
             if self._db_watermark:
                 videoEditor.addEditingStep(EditingStep.ADD_WATERMARK, {
@@ -93,11 +93,11 @@ class RedditShortEngine(ContentShortEngine):
                 videoEditor.addEditingStep(caption_type, {'text': text.upper(),
                                                                      'set_time_start': timing[0],
                                                                      'set_time_end': timing[1]})
-            if self._db_num_images:
-                for timing, image_url in self._db_timed_image_urls:
-                    videoEditor.addEditingStep(EditingStep.SHOW_IMAGE, {'url': image_url,
-                                                                        'set_time_start': timing[0],
-                                                                        'set_time_end': timing[1]})
+            # if self._db_num_images:
+            #     for timing, image_url in self._db_timed_image_urls:
+            #         videoEditor.addEditingStep(EditingStep.SHOW_IMAGE, {'url': image_url,
+            #                                                             'set_time_start': timing[0],
+            #                                                             'set_time_end': timing[1]})
 
             videoEditor.renderVideo(outputPath, logger= self.logger if self.logger is not self.default_logger else None)
 

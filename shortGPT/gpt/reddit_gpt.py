@@ -37,11 +37,13 @@ def getRealisticness(text):
 def getQuestionFromThread(text):
     if ((text.find("Reddit, ") < 15) and (10 < text.find("?") < 100)):
         question = text.split("?")[0].replace("Reddit, ", "").strip().capitalize()
+        if question[-1] != "?":
+            question += "?"
     else:
         chat, system = gpt_utils.load_local_yaml_prompt('prompt_templates/reddit_filter_realistic.yaml')
         chat = chat.replace("<<STORY>>", text)
         question = gpt_utils.gpt3Turbo_completion(chat_prompt=chat, system=system).replace("\n", "")
-        question = question.replace('"', '').replace("?", "")
+        question = question.replace('"', '')
     return question
 
 

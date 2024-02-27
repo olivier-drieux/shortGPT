@@ -76,12 +76,14 @@ class ContentShortEngine(AbstractContentEngine):
             whisper_analysis)
 
     def _generateImageSearchTerms(self):
+        pass
         self.verifyParameters(captionsTimed=self._db_timed_captions)
         if self._db_num_images:
             self._db_timed_image_searches = gpt_editing.getImageQueryPairs(
                 self._db_timed_captions, n=self._db_num_images)
 
     def _generateImageUrls(self):
+        pass
         if self._db_timed_image_searches:
             self._db_timed_image_urls = editing_images.getImageUrlsTimed(
                 self._db_timed_image_searches)
@@ -130,7 +132,7 @@ class ContentShortEngine(AbstractContentEngine):
                                                                           "volume_percentage": 0.11})
             videoEditor.addEditingStep(EditingStep.CROP_1920x1080, {
                                        'url': self._db_background_trimmed})
-            videoEditor.addEditingStep(EditingStep.ADD_SUBSCRIBE_ANIMATION, {'url': AssetDatabase.get_asset_link('subscribe animation')})
+            #videoEditor.addEditingStep(EditingStep.ADD_SUBSCRIBE_ANIMATION, {'url': AssetDatabase.get_asset_link('subscribe animation')})
 
             if self._db_watermark:
                 videoEditor.addEditingStep(EditingStep.ADD_WATERMARK, {
@@ -141,11 +143,11 @@ class ContentShortEngine(AbstractContentEngine):
                 videoEditor.addEditingStep(caption_type, {'text': text.upper(),
                                                           'set_time_start': timing[0],
                                                           'set_time_end': timing[1]})
-            if self._db_num_images:
-                for timing, image_url in self._db_timed_image_urls:
-                    videoEditor.addEditingStep(EditingStep.SHOW_IMAGE, {'url': image_url,
-                                                                        'set_time_start': timing[0],
-                                                                        'set_time_end': timing[1]})
+            # if self._db_num_images:
+            #     for timing, image_url in self._db_timed_image_urls:
+            #         videoEditor.addEditingStep(EditingStep.SHOW_IMAGE, {'url': image_url,
+            #                                                             'set_time_start': timing[0],
+            #                                                             'set_time_end': timing[1]})
 
             videoEditor.renderVideo(outputPath, logger= self.logger if self.logger is not self.default_logger else None)
 
@@ -154,16 +156,14 @@ class ContentShortEngine(AbstractContentEngine):
     def _addYoutubeMetadata(self):
         if not os.path.exists('videos/'):
             os.makedirs('videos')
-        self._db_yt_title, self._db_yt_description = gpt_yt.generate_title_description_dict(self._db_script)
+        # self._db_yt_title, self._db_yt_description = gpt_yt.generate_title_description_dict(self._db_script)
 
-        now = datetime.datetime.now()
-        date_str = now.strftime("%Y-%m-%d_%H-%M-%S")
-        newFileName = f"videos/{date_str} - " + \
-            re.sub(r"[^a-zA-Z0-9 '\n\.]", '', self._db_yt_title)
+        newFileName = f"videos/" + \
+            re.sub(r"[^a-zA-Z0-9 '\n\.]", '', self._db_reddit_question)
 
         shutil.move(self._db_video_path, newFileName+".mp4")
-        with open(newFileName+".txt", "w", encoding="utf-8") as f:
-            f.write(
-                f"---Youtube title---\n{self._db_yt_title}\n---Youtube description---\n{self._db_yt_description}")
+        # with open(newFileName+".txt", "w", encoding="utf-8") as f:
+        #     f.write(
+        #         f"---Youtube title---\n{self._db_yt_title}\n---Youtube description---\n{self._db_yt_description}")
         self._db_video_path = newFileName+".mp4"
         self._db_ready_to_upload = True
